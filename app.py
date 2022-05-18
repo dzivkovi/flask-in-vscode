@@ -18,3 +18,8 @@ def hello_there(name):
     # do not place business logic in the route functions
     return main.greeting(name)
 
+if __name__ == '__main__':
+    import os
+    
+    server_port = os.environ.get('PORT', '8080')
+    app.run(debug=True, port=server_port, host='0.0.0.0')
