@@ -1,13 +1,29 @@
-# Notes:
-# - Business logic goes in here
-# - To start VSCode Flask debugger make sure to be in the app.py file
-# - To start Flask app from the command line, run: 
-#       python -m flask run --port 5000
+"""
+This module contains the business logic for a Flask application that serves as a greeting service.
+It includes a function to create a personalized greeting using a provided name.
+
+Note:
+- Business logic goes in here
+- To start VSCode Flask debugger make sure to be in the app.py file
+- To start Flask app from the command line, run:
+    python -m flask run --port 5000
+"""
 
 from datetime import datetime
 import re
 
 def greeting(name):
+    """
+    Generate a personalized greeting with the provided name and current timestamp.
+    If the name contains any characters that are not letters, the greeting will use "Friend".
+
+    Args:
+        name (str): Name of the person to be greeted. 
+
+    Returns:
+        str: A personalized greeting string with current date and time.
+    """
+
     now = datetime.now()
     formatted_now = now.strftime("%A, %d %B, %Y at %X")
 
@@ -24,10 +40,6 @@ def greeting(name):
     return content
 
 # Main function to quickly test the business logic
-# TODO: Add some unit tests ontop of this
 if __name__=='__main__':
-
-    firstname = "Don@van"
-    print("Input : " + firstname + "\nOutput: " + greeting(firstname))
-
-
+    FIRSTNAME = "Don@van"
+    print("Input : " + FIRSTNAME + "\nOutput: " + greeting(FIRSTNAME))

@@ -1,8 +1,13 @@
-# Inspired by https://code.visualstudio.com/docs/python/tutorial-flask
+"""
+This module is a Flask application that serves as a greeting service. 
+It can be run both locally and on Google Cloud Run. 
+In a cloud environment, it configures a GCP logging client for application logs.
+The application provides two routes: 
+- / which returns a hello message
+- /hello/<name> which returns a personalized greeting message
 
-# Can be tested from the VScode or command line without having to deply the code to GCP.
-# To run from command line:
-#   $ python -m flask run --port 5000
+Inspired by https://code.visualstudio.com/docs/python/tutorial-flask
+"""
 
 import logging
 import os
@@ -30,10 +35,27 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST", "GET"])
 def home():
+    """
+    Home route that responds to GET and POST requests.
+    Returns a simple greeting message.
+
+    Returns:
+        str: A greeting string.
+    """
     return "Hello, Flask!"
 
 @app.route("/hello/<name>", methods=["POST", "GET"])
 def hello_there(name):
+    """
+    A route that responds to GET and POST requests with a personalized greeting.
+    Invokes business logic for the greeting. 
+
+    Args:
+        name (str): Name of the person to be greeted.
+
+    Returns:
+        str: A personalized greeting string.
+    """
     # do not place business logic in the route functions
     return business_logic.greeting(name)
 
