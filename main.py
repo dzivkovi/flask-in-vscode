@@ -1,33 +1,45 @@
-# Notes:
-# - Business logic goes in here
-# - To start VSCode Flask debugger make sure to be in the app.py file
-# - To start Flask app from the command line, run: 
-#       python -m flask run --port 5000
+# Inspired by https://code.visualstudio.com/docs/python/tutorial-flask
 
-from datetime import datetime
-import re
+# Can be tested from the VScode or command line without having to deply the code to GCP.
+# To run from command line:
+#   $ python -m flask run --port 5000
 
-def greeting(name):
-    now = datetime.now()
-    formatted_now = now.strftime("%A, %d %B, %Y at %X")
+import logging
+import os
+from flask import Flask
 
-    # Filter the name argument to letters only using regular expressions. URL arguments
-    # can contain arbitrary text, so we restrict to safe characters only.
-    match_object = re.match("[a-zA-Z]+", name)
+import google.cloud.logging
+from dotenv import load_dotenv
 
-    if match_object:
-        clean_name = match_object.group(0)
-    else:
-        clean_name = "Friend"
+import business_logic
 
-    content = "Hello there, " + clean_name + "! It's " + formatted_now
-    return content
+# Load environment variables
+load_dotenv()
 
-# Main function to quickly test the business logic
-# TODO: Add some unit tests ontop of this
-if __name__=='__main__':
+if __name__ != '__main__':
+    # Setup GCP logging
+    client = google.cloud.logging.Client()
+    # Configure the default logger to use the logging client
+    # By default this captures all logs at INFO level and higher
+    client.setup_logging()
+    # Adjust the logging level as per the environment variable
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG').upper()
+    logging.basicConfig(level=LOG_LEVEL)
 
-    firstname = "Don@van"
-    print("Input : " + firstname + "\nOutput: " + greeting(firstname))
+app = Flask(__name__)
 
+@app.route("/", methods=["POST", "GET"])
+def home():
+    return "Hello, Flask!"
 
+@app.route("/hello/<name>", methods=["POST", "GET"])
+def hello_there(name):
+    # do not place business logic in the route functions
+    return business_logic.greeting(name)
+
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT", '8080'))
+
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Cloud Run. See entrypoint in Dockerfile.
+    app.run(host="127.0.0.1", port=PORT, debug=True)

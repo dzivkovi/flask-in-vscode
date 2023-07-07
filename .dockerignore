@@ -4,4 +4,7 @@ README.md
 *.pyo
 *.pyd
 __pycache__
+etc
+env
 .pytest_cache
+mypy.ini
