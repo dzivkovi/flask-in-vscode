@@ -11,7 +11,7 @@ Inspired by https://code.visualstudio.com/docs/python/tutorial-flask
 
 import logging
 import os
-from flask import Flask
+from flask import Flask, request
 
 import google.cloud.logging
 from dotenv import load_dotenv
@@ -28,7 +28,7 @@ if __name__ != '__main__':
     # By default this captures all logs at INFO level and higher
     client.setup_logging()
     # Adjust the logging level as per the environment variable
-    LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG').upper()
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
     logging.basicConfig(level=LOG_LEVEL)
 
 app = Flask(__name__)
@@ -42,8 +42,11 @@ def home():
     Returns:
         str: A greeting string.
     """
-    return "Hello, Flask!"
+    logging.debug("Home page request received")
+    server = request.host_url  # Get the server URL
+    return f"Usage: {server}hello/Daniel"
 
+@app.route("/hello/", defaults={'name': None}, methods=["POST", "GET"])
 @app.route("/hello/<name>", methods=["POST", "GET"])
 def hello_there(name):
     """
@@ -57,6 +60,7 @@ def hello_there(name):
         str: A personalized greeting string.
     """
     # do not place business logic in the route functions
+    logging.debug("Hello page request received")
     return business_logic.greeting(name)
 
 if __name__ == "__main__":
