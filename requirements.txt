@@ -1,5 +1,8 @@
 # pip install -r requirements.txt
-google-cloud-logging
-Flask==2.1.0
-gunicorn==20.1.0
-requests>=2.28.1
+# Ensure that pip installs at least the minor version you have specified (the second number),
+# but it would not install a different major version (the first number) which might include breaking changes:
+Flask~=2.1
+google-cloud-logging~=3.5
+requests~=2.31
+gunicorn~=20.1
+python-dotenv
